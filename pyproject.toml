@@ -21,6 +21,7 @@ sentencepiece = "^0.1.99"
 transformers = "^4.34.1"
 torch = "^2.1.2"
 sacremoses = "^0.1.1"
+beir = "^2.0.0"
 
 
 [build-system]
