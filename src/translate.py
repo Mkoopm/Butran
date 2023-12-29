@@ -1,16 +1,29 @@
-from transformers import MarianMTModel, MarianTokenizer
+from abc import ABCMeta, abstractmethod
 
-src_text = [
-    "this is a sentence in english that we want to translate to french",
-    "This should go to portuguese",
-    "And this to Spanish",
-]
 
-model_name = "Helsinki-NLP/opus-mt-en-nl"
-tokenizer = MarianTokenizer.from_pretrained(model_name)
+class Translator(metaclass=ABCMeta):
+    """Abstract class that defines the interface of a 'translator'. 
+    
+    A translator should be initiated with an input and output language and
+    be able to translate a list of strings from the input to output language.
+    """
+    @abstractmethod
+    def __init__(self, language_from: str, language_to: str) -> None:
+        pass
 
-model = MarianMTModel.from_pretrained(model_name)
-translated = model.generate(**tokenizer(src_text, return_tensors="pt", padding=True))
-tgt_text = [tokenizer.decode(t, skip_special_tokens=True) for t in translated]
+    @abstractmethod
+    def translate(self, text_input: str) -> str:
+        pass
 
-print(f"{src_text}, translated:\n{tgt_text}")
+
+class TranslatorMarianMT(Translator):
+    def __init__(self, language_from: str, language_to: str) -> None:
+        from transformers import MarianMTModel, MarianTokenizer
+
+        model_name = f"Helsinki-NLP/opus-mt-{language_from}-{language_to}"
+        self.tokenizer = MarianTokenizer.from_pretrained(model_name)
+        self.model = MarianMTModel.from_pretrained(model_name)
+
+    def translate(self, text_input: list[str]) -> list[str]:
+        translated = self.model.generate(**self.tokenizer(text_input, return_tensors="pt", padding=True))
+        return [self.tokenizer.decode(t, skip_special_tokens=True) for t in translated]
