@@ -1,38 +1,31 @@
+import os
+from pathlib import Path
+import tqdm
+import json
+
+import torch
+
 from src.translate import TranslatorMarianMT
+
+torch.device("mps")
+
+dataset = "scifact"
+base_dir = Path("data")
+input_dir = base_dir / "raw" / dataset
+output_dir = base_dir / "translated" / dataset
 
 
 translator = TranslatorMarianMT("en", "nl")
-# source: https://github.com/beir-cellar/beir/tree/main
+with open(input_dir / "corpus.jsonl") as fp_in:
+    nr_lines = len([1 for line in fp_in])
 
-from beir import util, LoggingHandler
-from beir.retrieval import models
-from beir.datasets.data_loader import GenericDataLoader
-from beir.retrieval.evaluation import EvaluateRetrieval
-from beir.retrieval.search.dense import DenseRetrievalExactSearch as DRES
 
-import logging
-import pathlib, os
-
-#### Just some code to print debug information to stdout
-logging.basicConfig(format='%(asctime)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',
-                    level=logging.INFO,
-                    handlers=[LoggingHandler()])
-#### /print debug information to stdout
-
-#### Download scifact.zip dataset and unzip the dataset
-dataset = "scifact"
-url = "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{}.zip".format(dataset)
-out_dir = os.path.join(pathlib.Path(__file__).parent.absolute(), "datasets")
-data_path = util.download_and_unzip(url, out_dir)
-
-#### Provide the data_path where scifact has been downloaded and unzipped
-corpus, queries, qrels = GenericDataLoader(data_folder=data_path).load(split="test")
-
-#### Load the SBERT model and retrieve using cosine-similarity
-model = DRES(models.SentenceBERT("msmarco-distilbert-base-tas-b"), batch_size=16)
-retriever = EvaluateRetrieval(model, score_function="dot") # or "cos_sim" for cosine similarity
-results = retriever.retrieve(corpus, queries)
-
-#### Evaluate your model with NDCG@k, MAP@K, Recall@K and Precision@K  where k = [1,3,5,10,100,1000] 
-ndcg, _map, recall, precision = retriever.evaluate(qrels, results, retriever.k_values)
+with open(input_dir / "corpus.jsonl") as fp_in:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_dir / "corpus.jsonl", "w") as fp_out:
+        for line in tqdm.tqdm(fp_in, total=nr_lines):
+            data = json.loads(line)
+            data["title"] = translator.translate([data["title"]])
+            data["text"] = translator.translate([data["text"]])
+            fp_out.write(f"{json.dumps(data)}\n")
+        
