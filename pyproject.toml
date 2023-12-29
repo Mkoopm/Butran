@@ -4,12 +4,16 @@ version = "0.1.0"
 description = "Translate language model benchmarks."
 authors = ["Marten Koopmans <36400337+Mkoopm@users.noreply.github.com>"]
 readme = "README.md"
-
+packages = [{include = "src"}]
 
 [[tool.poetry.source]]
 name = "PyPI"
 priority = "primary"
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
 
 [tool.poetry.dependencies]
 python = "3.10.6"
