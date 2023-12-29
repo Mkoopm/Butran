@@ -5,9 +5,18 @@ description = "Translate language model benchmarks."
 authors = ["Marten Koopmans <36400337+Mkoopm@users.noreply.github.com>"]
 readme = "README.md"
 
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+
 [tool.poetry.dependencies]
-python = "^3.12"
-transformers = "^4.36.2"
+python = "3.10.6"
+sentencepiece = "^0.1.99"
+transformers = "^4.34.1"
+torch = "^2.1.2"
+sacremoses = "^0.1.1"
 
 
 [build-system]
