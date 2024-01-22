@@ -7,7 +7,6 @@ import torch
 
 from src.translate import TranslatorMarianMT
 
-torch.device("mps")
 
 dataset = "scifact"
 base_dir = Path("data")
