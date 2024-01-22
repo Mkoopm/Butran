@@ -1,6 +1,6 @@
 #### Provide the data_path where scifact has been downloaded and unzipped
 corpus, queries, qrels = GenericDataLoader(data_folder=data_path).load(split="test")
-
+ 
 
 
 
