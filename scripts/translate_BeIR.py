@@ -1,12 +1,9 @@
-import os
-from pathlib import Path
-import tqdm
 import json
+from pathlib import Path
 
-import torch
+import tqdm
 
 from src.translate import TranslatorMarianMT
-
 
 dataset = "scifact"
 base_dir = Path("data")
@@ -24,7 +21,6 @@ with open(input_dir / "corpus.jsonl") as fp_in:
     with open(output_dir / "corpus.jsonl", "w") as fp_out:
         for line in tqdm.tqdm(fp_in, total=nr_lines):
             data = json.loads(line)
-            data["title"] = translator.translate([data["title"]])
-            data["text"] = translator.translate([data["text"]])
+            data["title"] = translator.translate(data["title"])
+            data["text"] = translator.translate(data["text"])
             fp_out.write(f"{json.dumps(data)}\n")
-        
