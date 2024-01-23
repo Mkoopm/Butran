@@ -18,11 +18,12 @@ class Translator(metaclass=ABCMeta):
 
 class TranslatorMarianMT(Translator):
     def __init__(self, language_from: str, language_to: str) -> None:
-        from transformers import MarianMTModel, MarianTokenizer
+        from transformers import MarianMTModel, MarianTokenizer # type: ignore
 
         model_name = f"Helsinki-NLP/opus-mt-{language_from}-{language_to}"
         self.tokenizer = MarianTokenizer.from_pretrained(model_name)
         self.model = MarianMTModel.from_pretrained(model_name)
+
 
     def _string_fits_in_context(self, text: str):
         tokenized_length = self.tokenizer(text, return_tensors="pt", padding=True)["input_ids"].shape[1]
@@ -30,7 +31,7 @@ class TranslatorMarianMT(Translator):
         return tokenized_length < self.model.config.max_position_embeddings
 
 
-    def _fit_to_context(self, text: str, chunk_lst: list):
+    def _to_list_of_context_fitting_strings(self, text: str, chunk_lst: list):
         def split_text(text: str):
             print(f"type of text to split: {type(text)}")
             split_idx = text.rfind('. ', 0, int(len(text)/2))
@@ -44,15 +45,15 @@ class TranslatorMarianMT(Translator):
             chunk_lst.append(text)
         else:
             sub_text_1, sub_text_2 = split_text(text)
-            self._fit_to_context(sub_text_1, chunk_lst)
-            self._fit_to_context(sub_text_2, chunk_lst)
+            self._to_list_of_context_fitting_strings(sub_text_1, chunk_lst)
+            self._to_list_of_context_fitting_strings(sub_text_2, chunk_lst)
 
     def translate(self, text_input: str) -> str:
         if not isinstance(text_input, str):
             raise TypeError("input must be str.")
 
-        input_chunks = []
-        self._fit_to_context(text_input, input_chunks)
+        input_chunks: list = []
+        self._to_list_of_context_fitting_strings(text_input, input_chunks)
         input_chunks = input_chunks
 
         translated_ids_list = self.model.generate(**self.tokenizer(input_chunks, return_tensors="pt", truncation=True, padding=True))
