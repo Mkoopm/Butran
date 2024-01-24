@@ -1,5 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
+import torch
+
+torch.set_grad_enabled(False)
+
 
 class Translator(metaclass=ABCMeta):
     """Abstract class that defines the interface of a 'translator'.
@@ -29,14 +33,10 @@ class TranslatorMarianMT(Translator):
         tokenized_length = self.tokenizer(text, return_tensors="pt", padding=True)[
             "input_ids"
         ].shape[1]
-        print(
-            f"tokenized length: {tokenized_length}, context length: {self.model.config.max_position_embeddings}"
-        )
         return tokenized_length < self.model.config.max_position_embeddings
 
     def _to_list_of_context_fitting_strings(self, text: str, chunk_lst: list):
         def split_text(text: str):
-            print(f"type of text to split: {type(text)}")
             split_idx = text.rfind(". ", 0, int(len(text) / 2))
             if split_idx == -1:
                 split_idx = text.rfind(" ", 0, int(len(text) / 2))
