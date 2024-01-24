@@ -6,7 +6,7 @@ from typing import Iterator
 from src.core.exceptions import InvalidJsonlFile
 
 
-def read_jsonl_file(file_path: PathLike) -> Iterator[dict]:
+def iterate_data_jsonl_file(file_path: PathLike) -> Iterator[dict]:
     """Iterator loop over a jsonl file line by line."""
     file_path = Path(file_path)
     with open(file_path, "r") as f:
