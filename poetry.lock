@@ -110,6 +110,23 @@ files = [
 frozenlist = ">=1.1.0"
 
 [[package]]
+name = "argh"
+version = "0.31.1"
+description = "Plain Python functions as CLI commands without boilerplate"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "argh-0.31.1-py3-none-any.whl", hash = "sha256:488ddac50fe2cd05ca768d3af4a531ebea438bf3736fc39523fc2277cf66568a"},
+    {file = "argh-0.31.1.tar.gz", hash = "sha256:26e77b7bc3a5666b579e5dcd9d103be5b0ee5e956873a4d1163bd0c832a8f2c8"},
+]
+
+[package.extras]
+completion = ["argcomplete (>=2.0)"]
+docs = ["readthedocs-sphinx-search (==0.2.0)", "sphinx (>=6.1)", "sphinx-pyproject (==0.1.0)", "sphinx_rtd_theme (>=1.2.0)"]
+linters = ["pre-commit (>=3.4.0)"]
+test = ["pytest (>=7.4)", "pytest-cov (>=4.1)", "tox (>=4.11.3)"]
+
+[[package]]
 name = "attrs"
 version = "23.2.0"
 description = "Classes Without Boilerplate"
@@ -2668,4 +2685,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.7"
-content-hash = "5981a628b3b0681bd26805decdbff6c4ab874b536a6420f7107ea6ce033009f6"
+content-hash = "28daae0d4f1d4fe719938a776c8643342e1b8508ac001ef1f901f4990ccf371e"
