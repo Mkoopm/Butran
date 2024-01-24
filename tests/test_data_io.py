@@ -1,7 +1,7 @@
 import pytest
 
 from src.core.exceptions import InvalidJsonlFile
-from src.data_io import read_jsonl_file
+from src.data_io import iterate_data_jsonl_file
 
 
 @pytest.fixture()
@@ -17,7 +17,7 @@ def jsonl_test_invalid_data_path() -> str:
 def test_read_jsonl_file(jsonl_test_data_path):
     expected_keys = ["_id", "title", "text", "metadata"]
     data_list = []
-    for data in read_jsonl_file(jsonl_test_data_path):
+    for data in iterate_data_jsonl_file(jsonl_test_data_path):
         data_list.append(data)
 
     assert len(data_list) == 2
@@ -27,5 +27,5 @@ def test_read_jsonl_file(jsonl_test_data_path):
 
 def test_read_jsonl_invalid_file(jsonl_test_invalid_data_path):
     with pytest.raises(InvalidJsonlFile):
-        for data in read_jsonl_file(jsonl_test_invalid_data_path):
+        for data in iterate_data_jsonl_file(jsonl_test_invalid_data_path):
             pass
