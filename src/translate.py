@@ -1,3 +1,4 @@
+import warnings
 from abc import ABCMeta, abstractmethod
 
 import torch
@@ -27,7 +28,9 @@ class TranslatorMarianMT(Translator):
 
         model_name = f"Helsinki-NLP/opus-mt-{language_from}-{language_to}"
         self.tokenizer = MarianTokenizer.from_pretrained(model_name)
-        self.model = MarianMTModel.from_pretrained(model_name)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=UserWarning)
+            self.model = MarianMTModel.from_pretrained(model_name)
 
     def _string_fits_in_context(self, text: str):
         tokenized_length = self.tokenizer(text, return_tensors="pt", padding=True)[

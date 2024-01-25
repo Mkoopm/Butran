@@ -1,7 +1,9 @@
-import warnings
+import json
 from os import PathLike
+from pathlib import Path
 
 import argh
+import tqdm
 
 from src.core.exceptions import InvalidDelimiterError
 from src.data_io import iterate_data_jsonl_file
@@ -16,12 +18,18 @@ delimiter = ","
 )
 def main(
     input_file: PathLike,
+    output_file: PathLike,
     keys_to_translate: str,
     delimiter: str = delimiter,
     language_from: str = "en",
     language_to: str = "nl",
 ):
     """Read a jsonl file and translate the selected entries."""
+    input_file = Path(input_file)
+    output_file = Path(output_file)
+    with open(input_file) as fp_in:
+        nr_lines = len([None for line in fp_in])
+
     if len(delimiter) != 1:
         raise InvalidDelimiterError(
             f"the chosen delimiter '{delimiter}' not a 1 character delimiter."
@@ -29,14 +37,13 @@ def main(
 
     keys_to_translate_list = keys_to_translate.split(delimiter)
 
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", category=UserWarning)
-        translator = TranslatorMarianMT(language_from, language_to)
+    translator = TranslatorMarianMT(language_from, language_to)
 
-    for data in iterate_data_jsonl_file(input_file):
-        for key in keys_to_translate_list:
-            data[key] = translator.translate(data[key])
-        print(data)
+    with open(output_file, "w") as fp_out:
+        for data in tqdm.tqdm(iterate_data_jsonl_file(input_file), total=nr_lines):
+            for key in keys_to_translate_list:
+                data[key] = translator.translate(data[key])
+            fp_out.write(json.dumps(data) + "\n")
 
 
 if __name__ == "__main__":
