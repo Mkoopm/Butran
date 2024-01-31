@@ -38,8 +38,12 @@ class TranslatorMarianMT(Translator):
             return_tensors="pt",
             padding="max_length",
             max_length=self.model.config.max_position_embeddings,
+            return_overflowing_tokens=True,
+            return_length=True,
         )
-        return "overflowing_tokens" not in text_tokenized
+        return bool(
+            text_tokenized["length"] <= self.model.config.max_position_embeddings
+        )
 
     def _to_list_of_context_fitting_strings(self, text: str, chunk_lst: list):
         def split_text(text: str):
