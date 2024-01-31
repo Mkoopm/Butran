@@ -33,10 +33,13 @@ class TranslatorMarianMT(Translator):
             self.model = MarianMTModel.from_pretrained(model_name)
 
     def _string_fits_in_context(self, text: str):
-        tokenized_length = self.tokenizer(text, return_tensors="pt", padding=True)[
-            "input_ids"
-        ].shape[1]
-        return tokenized_length < self.model.config.max_position_embeddings
+        text_tokenized = self.tokenizer(
+            text,
+            return_tensors="pt",
+            padding="max_length",
+            max_length=self.model.config.max_position_embeddings,
+        )
+        return "overflowing_tokens" not in text_tokenized
 
     def _to_list_of_context_fitting_strings(self, text: str, chunk_lst: list):
         def split_text(text: str):
@@ -60,7 +63,6 @@ class TranslatorMarianMT(Translator):
 
         input_chunks: list = []
         self._to_list_of_context_fitting_strings(text_input, input_chunks)
-        input_chunks = input_chunks
 
         translated_ids_list = self.model.generate(
             **self.tokenizer(
