@@ -3,6 +3,12 @@ default_language_version:
 repos:
 - hooks:
   - args:
+    - --branch=main
+    id: no-commit-to-branch
+  repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+- hooks:
+  - args:
     - --fix
     id: ruff
     types:
