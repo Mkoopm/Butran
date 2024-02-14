@@ -39,14 +39,8 @@ repos:
     - id: conventional-pre-commit
       stages: [commit-msg]
       args: []
-- hooks:
-  - args:
-    - --profile=black
-    entry: isort
-    id: isort
-    language: system
-    name: isort
-    types:
-    - python
-  repo: https://github.com/pycqa/isort
-  rev: 5.11.2
+- repo: https://github.com/pycqa/isort
+  rev: 5.12.0
+  hooks:
+    - id: isort
+      name: isort (python)
