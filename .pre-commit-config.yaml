@@ -48,4 +48,5 @@ repos:
     name: isort
     types:
     - python
-  repo: local
+  repo: https://github.com/pycqa/isort
+  rev: 5.11.2
