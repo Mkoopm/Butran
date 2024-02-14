@@ -22,7 +22,7 @@ filterwarnings = [
 ]
 
 [tool.poetry.dependencies]
-python = "3.11.7"
+python = "~3.11.7"
 sentencepiece = "^0.1.99"
 transformers = "^4.34.1"
 torch = "^2.1.2"
