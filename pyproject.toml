@@ -22,7 +22,7 @@ filterwarnings = [
 ]
 
 [tool.poetry.dependencies]
-python = "3.11.7"
+python = "~3.11.7"
 sentencepiece = "^0.1.99"
 transformers = "^4.34.1"
 torch = "^2.1.2"
@@ -36,6 +36,13 @@ argh = "^0.31.1"
 ignore_missing_imports = "True"
 strict_optional = "True"
 
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
