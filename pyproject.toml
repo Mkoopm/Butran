@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "translate-benchmark"
+name = "butran"
 version = "0.1.0"
-description = "Translate language model benchmarks."
+description = "Bulk translator catered to translating machine learning benchmark sets."
 authors = ["Marten Koopmans <36400337+Mkoopm@users.noreply.github.com>"]
 readme = "README.md"
 packages = [{include = "src"}]
