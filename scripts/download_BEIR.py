@@ -18,9 +18,7 @@ logging.basicConfig(
 
 #### Download scifact.zip dataset and unzip the dataset
 dataset = "scifact"
-url = (
-    f"https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{dataset}.zip"
-)
+url = f"https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{dataset}.zip"
 
 cur_dir = pathlib.Path(__file__).parent
 target_dir = cur_dir.parent

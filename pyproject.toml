@@ -15,6 +15,7 @@ priority = "primary"
 pre-commit = "^3.6.0"
 pytest = "^7.4.4"
 pytest-cov = "^4.1.0"
+isort = "^5.13.2"
 
 [tool.pytest.ini_options]
 filterwarnings = [
@@ -36,6 +37,11 @@ argh = "^0.31.1"
 ignore_missing_imports = "True"
 strict_optional = "True"
 
+[tool.black]
+line-length = 100 
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+

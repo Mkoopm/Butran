@@ -24,10 +24,7 @@ def test_long_text_fits_in_context_length(
     marianmt_translator_en_nl: TranslatorMarianMT,
 ) -> None:
     assert (
-        marianmt_translator_en_nl._string_fits_in_context(
-            example_text.long_english_text
-        )
-        is False
+        marianmt_translator_en_nl._string_fits_in_context(example_text.long_english_text) is False
     )
 
 

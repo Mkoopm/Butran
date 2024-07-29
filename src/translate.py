@@ -2,6 +2,7 @@ import warnings
 from abc import ABCMeta, abstractmethod
 
 import torch
+from transformers import MarianMTModel, MarianTokenizer  # type: ignore
 
 torch.set_grad_enabled(False)
 
@@ -24,8 +25,6 @@ class Translator(metaclass=ABCMeta):
 
 class TranslatorMarianMT(Translator):
     def __init__(self, language_from: str, language_to: str) -> None:
-        from transformers import MarianMTModel, MarianTokenizer  # type: ignore
-
         model_name = f"Helsinki-NLP/opus-mt-{language_from}-{language_to}"
         self.tokenizer = MarianTokenizer.from_pretrained(model_name)
         with warnings.catch_warnings():
@@ -37,12 +36,12 @@ class TranslatorMarianMT(Translator):
             text,
             return_tensors="pt",
             padding="max_length",
-            max_length=self.model.config.max_position_embeddings,
+            max_length=self.model.config.max_position_embeddings,  # type: ignore
             return_overflowing_tokens=True,
             return_length=True,
         )
         return bool(
-            text_tokenized["length"] <= self.model.config.max_position_embeddings
+            text_tokenized["length"] <= self.model.config.max_position_embeddings  # type: ignore
         )
 
     def _to_list_of_context_fitting_strings(self, text: str, chunk_lst: list):
@@ -68,16 +67,11 @@ class TranslatorMarianMT(Translator):
         input_chunks: list = []
         self._to_list_of_context_fitting_strings(text_input, input_chunks)
 
-        translated_ids_list = self.model.generate(
-            **self.tokenizer(
-                input_chunks, return_tensors="pt", truncation=True, padding=True
-            )
+        translated_ids_list = self.model.generate(  # type: ignore
+            **self.tokenizer(input_chunks, return_tensors="pt", truncation=True, padding=True)
         )
 
         output = ""
         for translated_ids in translated_ids_list:
-
-            output += self.tokenizer.decode(
-                list(translated_ids), skip_special_tokens=True
-            )
+            output += self.tokenizer.decode(list(translated_ids), skip_special_tokens=True)
         return output
